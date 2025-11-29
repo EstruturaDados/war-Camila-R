@@ -4,12 +4,12 @@
 #include <time.h>
 
 #define MAX_TERRITORIO 5
+int idMissao = -1; // -1 indica que a missão ainda não foi definida
 
 typedef struct {
     char nome[30];
     char cor[10];
     int tropas;
-    int idMissao;
 } Territorio;
 
 void cleanBuffer(){
@@ -81,23 +81,21 @@ int missao(Territorio *territorio){
     printf("=================================================\n");
 
     // só gera uma missão se ainda não tiver uma
-    if (territorio[0].idMissao == 0){
-        int id = rand() % MAX_TERRITORIO;
-        territorio[0].idMissao = id;
+    if (idMissao == -1){
+        idMissao = rand() % MAX_TERRITORIO;
     }
 
-    int id = territorio[0].idMissao;
+    printf("\nDestruir o exército %s\n", territorio[idMissao].cor);
 
-    printf("\nDestruir o exército %s\n", territorio[id].cor);
+    return idMissao;
 }
 
 int validaMissao(Territorio *territorio){
-    int id = territorio[0].idMissao;
 
-    if (territorio[id].tropas == 0){
+    if (territorio[idMissao].tropas == 0){
         printf("\nMissão concluída!\n");
     } else {
-        printf("\nVocê ainda não completou sua missão\n");
+        printf("\nVocê ainda não completou sua missão. Continue até finalizar a missão ou saia do jogo.\n");
     }
 
     return 0;
@@ -235,6 +233,7 @@ void menuDeAcoes(Territorio *territorio){
                 break;
             case 2:
                 validaMissao(territorio);
+                mapaAtual(territorio);
                 break;
             case 0:
                 printf("\nSaindo do jogo...\n");
